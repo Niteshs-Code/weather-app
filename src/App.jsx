@@ -1,35 +1,44 @@
 import './App.css'
-import video from "./assets/midday.mp4"
-import meadows from "./assets/meadows.mp4"
+import React, { useState, useEffect } from 'react'
 import Data from './components/Data'
-import Good from "./component/Good"
+import Good from './components/Good'
 import Bad from './components/Bad'
 
 function App() {
-// "https://www.pexels.com/download/video/2113097/"
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      // Random index generate karte hain
+      const randomIndex = Math.floor(Math.random() * Good.length);
+      setCurrentIndex(randomIndex);
+    }, 25000); // 25 seconds
+
+    return () => clearTimeout(timer);
+  }, [currentIndex]);
 
   return (
-    <>
-        <div className="relative h-screen w-full">
+    <div className="relative h-screen w-full">
       {/* Background Video */}
-      <video 
-        autoPlay 
-        loop 
-        muted 
+      <video
+        key={Good[currentIndex].id} // important for reload
+        autoPlay
         playsInline
-        className="absolute top-0 left-0 w-full h-full object-cover -z-10"
+        loop={true}
+        className="absolute top-0 left-0 w-full h-full object-cover -z-10 transition-all duration-700"
       >
-        <source src={meadows} type="video/mp4" />
-        Your browser does not support the ideo tag.
+        <source src={Good[currentIndex].url} type="video/mp4" />
+        Your browser does not support the video tag.
       </video>
 
-      {/* Content */}
-      <div className="relative z-10 flex flex-col items-center  justify-center h-full text-white rounded-3xl ">
-      <div className='w-1/3 bg-black/20 backdrop-blur-2xl p-2 h-auto rounded-3xl'><Data/></div>
+      {/* Foreground Content */}
+      <div className="relative z-10 flex flex-col items-center justify-center h-full text-white">
+        <div className="w-1/3 bg-black/20 backdrop-blur-2xl p-2 rounded-3xl">
+          <Data />
+        </div>
       </div>
     </div>
-    </>
-  )
+  );
 }
 
-export default App
+export default App;
