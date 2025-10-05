@@ -1,4 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
+import { FaLocationDot } from "react-icons/fa6";
+import { FiSearch } from "react-icons/fi";
+import sunrise from "../images/sunrise.png"
+import sunset from "../images/sunset.png"
+import moon from "../images/moon.png"
+import rainyday from "../images/rainy-day.png"
+import rainy from "../images/rainy.png"
+import snow from "../images/snow.png"
+import sun from "../images/sun.png"
+import thunder from "../images/thunder.png"
+import wind from "../images/wind.png"
+
+
+
 
 const API_KEY = "c496137eb55f738dee8288b80ae333c4"; // apna API key
 
@@ -7,7 +21,10 @@ export default function WeatherApp() {
   const [city, setCity] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-console.log(weather)
+  const [show, setshow] = useState(false)
+  console.log(weather)
+  
+
 
   // 📌 Fetch weather by coordinates
   async function fetchByCoords(lat, lon) {
@@ -42,6 +59,7 @@ console.log(weather)
       setError(err.message);
     } finally {
       setLoading(false);
+      setshow(false)
     }
   }
 
@@ -61,45 +79,80 @@ console.log(weather)
 
   return (
     <div className="p-6 max-w-md mx-auto text-center">
-      <h1 className="text-2xl font-bold mb-4">🌤 Weather App</h1>
+      <div className=" flex justify-between mb-3">{ weather && (<><div className=" flex items-center text-left m-0 p-0  "><FaLocationDot className="inline mt-3 m-1 text-1xl" />
+<h1 className="text-3xl font-bold inline ">{weather.name}</h1></div>
+
+<button onClick={() => setshow(true)}><FiSearch className="text-2xl m-2" /></button>
+</>)} </div>
+     
+      
 
       {/* Search Box */}
-      <div className="flex gap-2 mb-4">
+      {show && <div className="flex gap-2 mb-4">
         <input
           type="text"
           value={city}
           onChange={(e) => setCity(e.target.value)}
           placeholder="Enter city"
-          className="border px-3 py-2 flex-1"
+          className=" px-3 py-2 flex-1 bg-white/10 rounded-2xl focus:outline-none focus:border-none"
         />
         <button
           onClick={() => fetchByCity(city)}
-          className="bg-blue-500 text-white px-4 py-2 rounded"
+          className="bg-blue-500 text-white px-4 py-2 font-bold rounded-xl cursor-pointer hover:bg-blue-800"
         >
           Search
         </button>
-      </div>
+      </div>}
 
       {/* Loading / Error / Data */}
       {loading && <p>Loading...</p>}
       {error && <p className="text-red-500">{error}</p>}
 
       {weather && (
-        <div className="bg-gray-100 p-4 rounded shadow mt-4 text-black">
-            <h1>weather details</h1>
-          <h2 className="text-lg font-semibold">{weather.name}</h2>
-          <p className="capitalize">{weather.weather[0].description}</p>
-          <h3 className="text-3xl font-bold"> feel likes{Math.round(weather.main.temp)}°C</h3>
-          <p>💧 Humidity: {weather.main.humidity}%</p>
-          <p>💨 Wind: {weather.wind.speed} m/s</p>
-          <p>air presure {weather.main.pressure}</p>
-          <p>visibility {weather.visibility}</p>
+        <div className="bg-gray-800/15 p-4 rounded shadow mt-4 text-white ">
+          <div className=" flex flex-row "><h3 className="text-5xl font-medium inline ">{Math.round(weather.main.temp)}</h3>
+
+            <div className="ml-1   flex-col text-left  space-y-1"><p className="text-sm">°C</p><p className="capitalize font-semibold pl-1">{weather.weather[0].description}</p></div>
+          </div>
+          <div className="flex space-x-1.5 pt-2 text-sm font-semibold"><p>{new Date(weather.dt * 1000).toLocaleDateString("en-US", {
+    month: "short",  
+    day: "numeric",  
+    weekday: "short" 
+  })}</p> <p className="ml-4">{Math.round(weather.main.temp_max)}°C / {Math.floor(weather.main.temp_min)-3}°C</p></div>
+          <div className="pt-3 flex justify-between items-center mt-9">
+            <div className="flex flex-col justify-center items-center"> <img src={sunrise} className="w-10 h-10" />
+            <p>{new Date(weather.sys.sunrise * 1000).toLocaleTimeString("en-IN", {
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: true
+          })}</p></div>
+            <div className="flex flex-col justify-center items-center"><img src={sunset} className="w-10 h-10" />
+            <p>{new Date(weather.sys.sunset * 1000).toLocaleTimeString("en-IN", {
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: true
+          })}</p></div>
+
+</div>
+          <hr className="m-2" />
+          <div className="font-semibold w-[90%] bg-black/20 rounded-3xl p-1 mb-5 "><a href="">15-day Weather forecast</a></div>
+
+          <div></div>
+
+           <h1 className="font-semibold text-left mb-2 mt-10">weather details</h1>
+          <div className="flex items-center justify-between mb-6  ">
+            <p className="flex flex-col"><span className="text-gray-300 text-sm">Feel like</span><span className="font-semibold text-2xl">{Math.round(weather.main.temp)}°C</span></p><p className="flex flex-col "><span className="text-gray-300 text-sm">Humidity</span><span className="font-semibold text-2xl">{weather.main.humidity}%</span></p></div>    
+          <div className="flex items-center justify-between mb-6  ">
+            <p className="flex flex-col"><span className="text-gray-300 text-sm">W wind</span><span className="font-semibold text-2xl">{weather.wind.speed} km/h</span></p><p className="flex flex-col "><span className="text-gray-300 text-sm">UV</span><span className="font-semibold text-2xl">Weak</span></p></div>       
+          <div className="flex items-center justify-between mb-6  ">
+            <p className="flex flex-col"><span className="text-gray-300 text-sm">visibility</span><span className="font-semibold text-2xl">{String(weather.visibility).slice(0, 2)} Km</span></p><p className="flex flex-col "><span className="text-gray-300 text-sm">Air pressure</span><span className="font-semibold  text-2xl">{weather.main.pressure}hPa</span></p></div>       
           
-          <p>sunrise: {new Date(weather.sys.sunrise * 1000).toLocaleTimeString("en-IN", {
-  hour: "2-digit",
-  minute: "2-digit",
-  hour12: true
-})}</p>
+          {/* <h2 className="text-lg font-semibold inline">{weather.name}</h2> */}
+          
+          <p> </p>
+          <p>{weather.weather[0].main}</p>
+
+          
         </div>
       )}
     </div>
