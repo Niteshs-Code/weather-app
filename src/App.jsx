@@ -2,7 +2,7 @@ import './App.css'
 import React, { useState, useEffect } from 'react'
 import Data from './components/Data'
 import Good from './components/Good'
-import Bad from './components/Bad'
+
 
 function App() {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -33,7 +33,7 @@ function App() {
 
       {/* Foreground Content */}
       <div className="relative z-10 flex flex-col items-center justify-center h-full text-white">
-        <div className="w-1/3 bg-black/20 backdrop-blur-2xl p-2 rounded-3xl">
+        <div className="lg:w-1/3 w-full bg-black/20 backdrop-blur-2xl rounded-3xl">
           <Data />
         </div>
       </div>
