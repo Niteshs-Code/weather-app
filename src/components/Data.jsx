@@ -23,7 +23,6 @@ export default function WeatherApp() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [show, setshow] = useState(false)
-  console.log(weather)
   const weathers = [moon, rainy, rainyday, snow, sun, thunder, wind];
 
 
